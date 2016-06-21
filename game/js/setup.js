@@ -78,5 +78,5 @@ function setupGame(game) {
     game.player = {}
     game.player.shape = game.scene.penguin;
     game.player.yVelocity = -1;
-    game.player.yPos = canvas.height - PINGU_SIZE;
+    game.player.yPos = game.stage.canvas.height - PINGU_SIZE;
 }
