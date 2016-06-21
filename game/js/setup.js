@@ -85,8 +85,8 @@ function setupGUI(stage, scene) {
         var bubble  = new createjs.Bitmap('assets/square/bubble.png');
             bubble.scaleX = 0.5;
             bubble.scaleY = 0.5;
-            bubble.x = stage.canvas.width - 64;
-            bubble.y = stage.canvas.height - 48 - i * 48;
+            bubble.x = stage.canvas.width - 96;
+            bubble.y = stage.canvas.height - 64 - i * 48;
             stage.addChild(bubble);
         scene.hud.breathBubbles[i] = bubble;
     }
