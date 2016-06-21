@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Flappy Penguin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/easeljs-0.8.2.min.js"></script>
+    <script src="js/constants.js"></script>
+    <script src="js/setup.js"></script>
+    <script>
+
+        window.addEventListener('load', function (e) {
+            var canvas = document.getElementById('stage');
+            canvas.width = document.body.getBoundingClientRect().width;
+            canvas.height = document.body.getBoundingClientRect().height * 0.8;
+
+            var stage = initStage(new createjs.Stage('stage'));
+            var scene = generateScene(stage);
+
+            var xVelocity = 0;
+            var xPos = canvas.width / 2 - 50;
+            var yVelocity = -1;
+            var yPos = canvas.height - 50;
+            var size = 50;
+            var breathing = 0;
+
+            scene.penguin.x = xPos;
+            scene.penguin.y = yPos;
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key || e.keyCode) {
+                    switch (e.keyCode) {
+                        case 32:
+                            if (yPos > TOP_DIST - PINGU_SIZE / 2) yVelocity = 1;
+                            break;
+                    }
+                }
+            });
+
+            var score = 0;
+            createjs.Ticker.setInterval(1000/FPS);
+            createjs.Ticker.setFPS(FPS);
+            createjs.Ticker.addEventListener("tick", function () {
+                score += 1 / FPS;
+                scene.score.text = "Score: " + Math.floor(score);
+                if (yVelocity > -1) {
+                    yVelocity -= 0.1;
+                }
+                yPos = yPos + -16 * yVelocity;
+                if (yPos > canvas.height - PINGU_SIZE) {
+                    yPos = canvas.height - PINGU_SIZE;
+                } else {
+                    scene.penguin.alpha = 1;
+                }
+
+                scene.penguin.y = yPos - 5;
+                scene.penguin.x = canvas.width / 4 - PINGU_SIZE;
+
+                scene.obstacles.map(function (obstacle) {
+                    obstacle.x -= 6;
+                    if (obstacle.x < -150) {
+                        obstacle.y = TOP_DIST / 2 + Math.floor(Math.random() * (canvas.height - TOP_DIST));
+                        obstacle.x = canvas.width + Math.random() * 100;
+                        obstacle.rotation = Math.random() * 20 - 10;
+                        obstacle.scaleY = 0.5 + (Math.random() / 2);
+                        obstacle.scaleX = obstacle.scaleY;
+                        obstacle.scaleY *= STAGE_YSCALE;
+                        obstacle.scaleX *= STAGE_XSCALE;
+                    }
+                })
+
+                stage.update();
+            });
+        });
+    </script>
+</head>
+<body>
+    <canvas id="stage" width="500" height="512"></canvas>
+</body>
+</html>
