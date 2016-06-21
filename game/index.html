@@ -7,6 +7,8 @@
     <script src="js/easeljs-0.8.2.min.js"></script>
     <script src="js/constants.js"></script>
     <script src="js/setup.js"></script>
+    <script src="js/collision.js"></script>
+    <script src="js/logic.js"></script>
     <script>
 
         window.addEventListener('load', function (e) {
@@ -14,18 +16,20 @@
             canvas.width = document.body.getBoundingClientRect().width;
             canvas.height = document.body.getBoundingClientRect().height * 0.8;
 
-            var stage = initStage(new createjs.Stage('stage'));
-            var scene = generateScene(stage);
+            var game = {};
+                game.stage = new createjs.Stage('stage')
+            initStage(game.stage);
+                game.scene = generateScene(game.stage);
+            setupGUI(game.stage, game.scene);
+
+            game.breath = MAX_BREATH;
+            game.score = 0;
+
 
             var xVelocity = 0;
             var xPos = canvas.width / 2 - 50;
             var yVelocity = -1;
             var yPos = canvas.height - 50;
-            var size = 50;
-            var breathing = 0;
-
-            scene.penguin.x = xPos;
-            scene.penguin.y = yPos;
 
             document.addEventListener('keydown', function (e) {
                 if (e.key || e.keyCode) {
@@ -37,26 +41,31 @@
                 }
             });
 
-            var score = 0;
             createjs.Ticker.setInterval(1000/FPS);
             createjs.Ticker.setFPS(FPS);
             createjs.Ticker.addEventListener("tick", function () {
-                score += 1 / FPS;
-                scene.score.text = "Score: " + Math.floor(score);
+                game.score += 1 / FPS;
+                game.scene.gui.score.text = "Score: " + Math.floor(game.score);
                 if (yVelocity > -1) {
                     yVelocity -= 0.1;
                 }
                 yPos = yPos + -16 * yVelocity;
                 if (yPos > canvas.height - PINGU_SIZE) {
                     yPos = canvas.height - PINGU_SIZE;
-                } else {
-                    scene.penguin.alpha = 1;
                 }
 
-                scene.penguin.y = yPos - 5;
-                scene.penguin.x = canvas.width / 4 - PINGU_SIZE;
+                game.scene.penguin.y = yPos - 5;
+                game.scene.penguin.x = canvas.width / 4 - PINGU_SIZE;
 
-                scene.obstacles.map(function (obstacle) {
+                for (var i = 0; i < game.scene.obstacles.length; i++) {
+                    if (collision(game.scene.penguin, game.scene.obstacles[i])) {
+                        game.scene.obstacles[i].alpha = 0.2;
+                    } else {
+                        game.scene.obstacles[i].alpha = 1;
+                    }
+                }
+
+                game.scene.obstacles.map(function (obstacle) {
                     obstacle.x -= 6;
                     if (obstacle.x < -150) {
                         obstacle.y = TOP_DIST / 2 + Math.floor(Math.random() * (canvas.height - TOP_DIST));
@@ -69,7 +78,8 @@
                     }
                 })
 
-                stage.update();
+                updateBreath(game);
+                game.stage.update();
             });
         });
     </script>

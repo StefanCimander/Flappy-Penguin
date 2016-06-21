@@ -2,7 +2,6 @@ function initStage(stage) {
     stage.rotation = STAGE_ROTATION;
     stage.scaleY = STAGE_XSCALE;
     stage.scaleX = STAGE_YSCALE;
-    return stage;
 }
 
 function generateScene(stage) {
@@ -14,6 +13,7 @@ function generateScene(stage) {
     scene.water = new createjs.Shape();
     scene.water.graphics.beginFill('#88baec').drawRect(0,TOP_DIST,stage.canvas.width, stage.canvas.height - TOP_DIST);
     scene.water.alpha = 0.5;
+
     scene.reflection = new createjs.Shape();
     scene.reflection.graphics.beginFill('#fff').drawRect(0,TOP_DIST,stage.canvas.width,1);
     scene.reflection.alpha = 0.5;
@@ -30,6 +30,7 @@ function generateScene(stage) {
         for (var i = 0; i < count; i++) {
             obstacles[i] = new createjs.Shape();
             obstacles[i].graphics.beginFill('#fff').drawRect(0, 0, 150, 150);
+            obstacles[i].setBounds(0,0,150,150);
             obstacles[i].x = stage.canvas.width / 2 + Math.random() * stage.canvas.width;
             obstacles[i].y = Math.random() * (stage.canvas.height - 75 - TOP_DIST) + TOP_DIST;
             obstacles[i].rotation = Math.random() * 20 - 10;
@@ -46,11 +47,24 @@ function generateScene(stage) {
     stage.addChild(scene.water);
     stage.addChild(scene.reflection);
 
-    scene.score = new createjs.Text("0", "24px Segoe UI", "#fff");
-    scene.score.x = 40;
-    scene.score.y = 40;
-    scene.textBaseline = "alphabetic";
-    stage.addChild(scene.score);
     return scene;
 }
 
+
+function setupGUI(stage, scene) {
+    scene.gui = {}
+    scene.gui.score = new createjs.Text("0", "24px Segoe UI", "#fff");
+    scene.gui.score.x = 40;
+    scene.gui.score.y = 40;
+    scene.gui.scoretextBaseline = "alphabetic";
+
+    stage.addChild(scene.gui.score);
+
+    scene.gui.breathBubbles = [];
+    for (var i = 0; i < MAX_BREATH; i++) {
+        var bubble  = new createjs.Shape();
+            bubble.graphics.beginFill('#abe2fc').drawCircle(stage.canvas.width - 45, 45 + i * 25, 10);
+            stage.addChild(bubble);
+        scene.gui.breathBubbles[i] = bubble;
+    }
+}
