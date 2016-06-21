@@ -45,7 +45,7 @@
             createjs.Ticker.setFPS(FPS);
             createjs.Ticker.addEventListener("tick", function () {
                 game.score += 1 / FPS;
-                game.scene.gui.score.text = "Score: " + Math.floor(game.score);
+                game.scene.hud.score.text = "Score: " + Math.floor(game.score);
                 if (yVelocity > -1) {
                     yVelocity -= 0.1;
                 }

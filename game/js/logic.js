@@ -7,11 +7,11 @@ function updateBreath(game) {
 
     for (var i = 0; i < MAX_BREATH; i++) {
         if (game.breath < i + 1 && game.breath > i) {
-            game.scene.gui.breathBubbles[i].alpha = game.breath - Math.floor(game.breath);
+            game.scene.hud.breathBubbles[i].alpha = game.breath - Math.floor(game.breath);
         } else if (game.breath < i + 1) {
-            game.scene.gui.breathBubbles[i].alpha = 0;
+            game.scene.hud.breathBubbles[i].alpha = 0;
         } else {
-            game.scene.gui.breathBubbles[i].alpha = 1;
+            game.scene.hud.breathBubbles[i].alpha = 1;
         }
     }
 }

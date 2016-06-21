@@ -52,19 +52,22 @@ function generateScene(stage) {
 
 
 function setupGUI(stage, scene) {
-    scene.gui = {}
-    scene.gui.score = new createjs.Text("0", "24px Segoe UI", "#fff");
-    scene.gui.score.x = 40;
-    scene.gui.score.y = 40;
-    scene.gui.scoretextBaseline = "alphabetic";
+    scene.hud = {}
+    scene.hud.score = new createjs.Text("0", "24px Segoe UI", "#fff");
+    scene.hud.score.x = 40;
+    scene.hud.score.y = 40;
+    scene.hud.scoretextBaseline = "alphabetic";
 
-    stage.addChild(scene.gui.score);
+    stage.addChild(scene.hud.score);
 
-    scene.gui.breathBubbles = [];
+    scene.hud.breathBubbles = [];
     for (var i = 0; i < MAX_BREATH; i++) {
-        var bubble  = new createjs.Shape();
-            bubble.graphics.beginFill('#abe2fc').drawCircle(stage.canvas.width - 45, 45 + i * 25, 10);
+        var bubble  = new createjs.Bitmap('assets/square/bubble.png');
+            bubble.scaleX = 0.25;
+            bubble.scaleY = 0.25;
+            bubble.x = stage.canvas.width - 45;
+            bubble.y = 20 + i * 25;
             stage.addChild(bubble);
-        scene.gui.breathBubbles[i] = bubble;
+        scene.hud.breathBubbles[i] = bubble;
     }
 }

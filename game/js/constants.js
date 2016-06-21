@@ -6,7 +6,7 @@ const FPS                   = 30,
       STAGE_YSCALE          = 1,
       STAGE_ROTATION        = 0,
 
-      IS_FEMALE             = true,
+      IS_FEMALE             = false,
 
       MAX_BREATH            = 10;
       BREATH_DECREASE_RATE  = 0.05,
