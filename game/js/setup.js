@@ -18,8 +18,8 @@ function generateScene(stage) {
     scene.reflection.graphics.beginFill('#fff').drawRect(0,TOP_DIST,stage.canvas.width,1);
     scene.reflection.alpha = 0.5;
 
-    scene.penguin = IS_FEMALE ? new createjs.Bitmap("assets/square/pingu_female.png")
-                              : new createjs.Bitmap("assets/square/pingu_male.png");
+    scene.penguin = IS_FEMALE ? new createjs.Bitmap(FEMALE_PENGUIN_SPRITE)
+                              : new createjs.Bitmap(MALE_PENGUIN_SPRITE);
     scene.penguin.x = stage.canvas.width / 4 - 64;
     scene.penguin.y = stage.canvas.height / 2;
 
@@ -29,8 +29,8 @@ function generateScene(stage) {
         var obstacles = [];
         for (var i = 0; i < count; i++) {
             obstacles[i] = new createjs.Shape();
-            obstacles[i].graphics.beginFill('#fff').drawRect(0, 0, 150, 150);
-            obstacles[i].setBounds(0,0,150,150);
+            obstacles[i].graphics.beginFill('#fff').drawRect(0, 0, MAX_OBSTACLE_SIZE, MAX_OBSTACLE_SIZE);
+            obstacles[i].setBounds(0,0,MAX_OBSTACLE_SIZE,MAX_OBSTACLE_SIZE);
             obstacles[i].x = stage.canvas.width / 2 + Math.random() * stage.canvas.width;
             obstacles[i].y = Math.random() * (stage.canvas.height - 75 - TOP_DIST) + TOP_DIST;
             obstacles[i].rotation = Math.random() * 20 - 10;
@@ -50,12 +50,11 @@ function generateScene(stage) {
     return scene;
 }
 
-
 function setupGUI(stage, scene) {
     scene.hud = {}
     scene.hud.score = new createjs.Text("0", "24px Segoe UI", "#fff");
-    scene.hud.score.x = 40;
-    scene.hud.score.y = 40;
+    scene.hud.score.x = 48;
+    scene.hud.score.y = 24;
     scene.hud.scoretextBaseline = "alphabetic";
 
     stage.addChild(scene.hud.score);
@@ -65,9 +64,19 @@ function setupGUI(stage, scene) {
         var bubble  = new createjs.Bitmap('assets/square/bubble.png');
             bubble.scaleX = 0.25;
             bubble.scaleY = 0.25;
-            bubble.x = stage.canvas.width - 45;
-            bubble.y = 20 + i * 25;
+            bubble.x = stage.canvas.width - 48;
+            bubble.y = 24 + i * 25;
             stage.addChild(bubble);
         scene.hud.breathBubbles[i] = bubble;
     }
+}
+
+function setupGame(game) {
+    game.breath = MAX_BREATH;
+    game.score = 0;
+
+    game.player = {}
+    game.player.shape = game.scene.penguin;
+    game.player.yVelocity = -1;
+    game.player.yPos = canvas.height - PINGU_SIZE;
 }
