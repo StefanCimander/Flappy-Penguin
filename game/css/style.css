@@ -10,9 +10,12 @@ canvas {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    background: url(../assets/noise.png);
+    /*
     background: #7db9e8;
     background: -moz-linear-gradient(top, #7db9e8 0%, #000000 100%);
     background: -webkit-linear-gradient(top, #7db9e8 0%,#000000 100%);
     background: linear-gradient(to bottom, #7db9e8 0%,#000000 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#000000',GradientType=0 );
+    */
 }

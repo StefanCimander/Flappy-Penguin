@@ -20,6 +20,7 @@
             canvas.height = document.body.getBoundingClientRect().height * 0.8;
 
             var game = {};
+                game.paused = true;
                 game.stage = new createjs.Stage('stage')
             initStage(game.stage);
                 game.scene = generateScene(game.stage);
