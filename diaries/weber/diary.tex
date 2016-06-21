@@ -1,6 +1,7 @@
 \documentclass{article}
 
 \usepackage{graphicx}
+\usepackage{subfig}
 
 \begin{document}
 
@@ -43,9 +44,11 @@
 
     \subsection{Early drafts}
         See Fig. \ref{fig:concepts}
-        \begin{figure}
-
-            \caption{Concept sketches}
+        \begin{figure}[h]
+            \subfloat[Mockup]{
+                \includegraphics[width=0.45\textwidth]{img/02_mockup.png}
+            }
+            \caption{Concept}
             \label{fig:concepts}
         \end{figure}
 
@@ -53,8 +56,16 @@
 
     \subsection{Early game prototype}
         See Fig. \ref{fig:prototype_screenshots}
-        \begin{figure}
-
+        \begin{figure}[h]
+            % \subfloat[Early prototype]{
+                % \includegraphics[width=0.45\textwidth]{img/03_prototype_screenshot.png}
+            % }
+            \subfloat[Early game assets]{
+                \includegraphics[width=0.45\textwidth]{img/04_penguin_assets.png}
+            }
+            \subfloat[Prototype using first few assets]{
+                \includegraphics[width=0.45\textwidth]{img/05_prototype_screenshot.png}
+            }
             \caption{Screenshots of different iterations}
             \label{fig:prototype_screenshots}
         \end{figure}
