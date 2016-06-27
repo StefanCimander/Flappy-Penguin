@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <title>Flappy Penguin</title>
     <link rel="stylesheet" href="css/style.css">
+
+    <script src="/socket.io/socket.io.js"></script>
+
     <script src="js/easeljs-0.8.2.min.js"></script>
 
     <script src="js/config.js"></script>
@@ -27,12 +30,25 @@
             setupGUI(game.stage, game.scene);
             setupGame(game);
 
+            game.breathFunction = breath(game);
+            console.log(game.breath);
+
             document.addEventListener('keydown', keyboardHandler(game));
 
             createjs.Ticker.setInterval(1000 / FPS);
             createjs.Ticker.setFPS(FPS);
             createjs.Ticker.addEventListener("tick", function () {
                 game.stage.update();
+            });
+
+            var socket = io('127.0.0.1:3000');
+            window.socket = socket;
+            socket.on('arduino-data', (data) => {
+                console.log("Arduino:", data);
+                if (data.breath) {
+                    console.log("yay");
+                    game.breathFunction();
+                }
             });
 
             window.setInterval(function () { gameUpdate(game); }, 1000 / UPDATE_RATE);
