@@ -1,57 +1,46 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>Flappy Penguin</title>
     <link rel="stylesheet" href="css/style.css">
 
-    <script src="/socket.io/socket.io.js"></script>
-
+    <script src="js/socket.io/socket.io.js"></script>
     <script src="js/easeljs-0.8.2.min.js"></script>
 
     <script src="js/config.js"></script>
     <script src="js/assets.js"></script>
-    <script src="js/setup.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/PauseScreen.js"></script>
     <script src="js/collision.js"></script>
-    <script src="js/logic.js"></script>
-    <script src="js/keyboard.js"></script>
+    
 
+    <!-- ReSharper disable once Html.EventNotResolved createjs.Ticker.addEventListener('tick',..)-->
     <script>
         window.addEventListener('load', function (e) {
             var canvas = document.getElementById('stage');
             canvas.width = document.body.getBoundingClientRect().width;
             canvas.height = document.body.getBoundingClientRect().height * 0.8;
 
-            var game = {};
-                game.paused = true;
-                game.stage = new createjs.Stage('stage')
-            initStage(game.stage);
-                game.scene = generateScene(game.stage);
-            setupGUI(game.stage, game.scene);
-            setupGame(game);
+            var game = new Game();
+            
+            document.addEventListener('keydown', game.getKeyboardHandler());
 
-            game.breathFunction = breath(game);
-            console.log(game.breath);
-
-            document.addEventListener('keydown', keyboardHandler(game));
-
-            createjs.Ticker.setInterval(1000 / FPS);
             createjs.Ticker.setFPS(FPS);
-            createjs.Ticker.addEventListener("tick", function () {
-                game.stage.update();
-            });
-
+            createjs.Ticker.setInterval(1000 / FPS);
+            createjs.Ticker.addEventListener('tick', function () { game.stage.update(); }); /*needs to declare a function, otherwise 'this' references get confused in the framework*/
+            
             var socket = io('127.0.0.1:3000');
             window.socket = socket;
-            socket.on('arduino-data', (data) => {
+            socket.on('arduino-data', function(data) {
                 console.log("Arduino:", data);
                 if (data.breath) {
                     console.log("yay");
-                    game.breathFunction();
+                    game.breath();
                 }
             });
 
-            window.setInterval(function () { gameUpdate(game); }, 1000 / UPDATE_RATE);
+            window.setInterval( game.gameUpdate, 1000 / UPDATE_RATE);
         });
     </script>
 </head>
