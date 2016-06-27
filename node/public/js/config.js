@@ -9,8 +9,8 @@ const FPS                   = 60,
       IS_FEMALE             = false,
 
       MAX_BREATH            = 10,
-      BREATH_DECREASE_RATE  = 0.01,
-      BREATH_REPLENISH_RATE = 0.05,
+      BREATH_DECREASE_RATE  = 1,
+      BREATH_REPLENISH_RATE = 1,
 
       YVELOCITY_DECREASE    = 0.015,
       MAX_DROP_SPEED        = 3,
