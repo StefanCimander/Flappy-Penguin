@@ -5,13 +5,17 @@
     <title>Flappy Penguin</title>
     <link rel="stylesheet" href="css/style.css">
 
-    <script src="js/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="js/easeljs-0.8.2.min.js"></script>
 
     <script src="js/config.js"></script>
     <script src="js/assets.js"></script>
-    <script src="js/game.js"></script>
+
+    <script src="js/Player.js"></script>
+    <script src="js/HUD.js"></script>
     <script src="js/PauseScreen.js"></script>
+    <script src="js/Scene.js"></script>
+    <script src="js/Game.js"></script>
     <script src="js/collision.js"></script>
     
 
@@ -28,17 +32,17 @@
 
             createjs.Ticker.setFPS(FPS);
             createjs.Ticker.setInterval(1000 / FPS);
-            createjs.Ticker.addEventListener('tick', function () { game.stage.update(); }); /*needs to declare a function, otherwise 'this' references get confused in the framework*/
+            createjs.Ticker.addEventListener('tick', function () { game.stage.update(); }); //need to declare a new function to scope 'this' reference
             
-            var socket = io('127.0.0.1:3000');
+            /*var socket = io('127.0.0.1:3000');
             window.socket = socket;
             socket.on('arduino-data', function(data) {
                 console.log("Arduino:", data);
                 if (data.breath) {
                     console.log("yay");
-                    game.breath();
+                    game.breathe();
                 }
-            });
+            });*/
 
             window.setInterval( game.gameUpdate, 1000 / UPDATE_RATE);
         });
