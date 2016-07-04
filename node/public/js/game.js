@@ -9,7 +9,8 @@ function Game() {
 
     var scene   = new Scene(self.stage.canvas.width, self.stage.canvas.height);
     var hud     = new HUD(self.stage.canvas.width, self.stage.canvas.height);
-    var player  = new Player(self.stage.canvas.width, self.stage.canvas.height);
+    var player = new Player(self.stage.canvas.width, self.stage.canvas.height, self.stage.canvas.width / 4 - PINGU_SIZE, self.stage.canvas.height / 2, GENDER_MALE);
+    var chased = new Player(self.stage.canvas.width, self.stage.canvas.height, self.stage.canvas.width * 3 / 4 - PINGU_SIZE, self.stage.canvas.height / 2, GENDER_FEMALE);
 
     var bubbles = [];
     var paused = true;
@@ -36,6 +37,7 @@ function Game() {
         initStage();
 
         scene.registerForRenderBackground(self.stage);
+        chased.registerForRender(self.stage);
         player.registerForRender(self.stage);
         scene.registerForRenderForeground(self.stage);
         hud.registerForRender(self.stage);
@@ -46,11 +48,30 @@ function Game() {
     this.isPaused = function () { return paused; };
     this.isGameOver = function () { return gameover; };
 
+    var timestamp = Date.now();
     this.gameUpdate = function () {
+        var dt = (Date.now() - timestamp) / 1000;
+        timestamp = Date.now();
+        
         if (!paused) {
-            score += 1 / FPS;
+            score += dt;
 
-            player.update(self.stage);
+            var playerOldX = player.getXPos();
+            player.update(dt);
+            chased.update(dt);
+
+            var dxScene = player.getXPos() - playerOldX;
+            scene.update(dt);
+            
+            if (dxScene > 0)
+                [scene, player, chased].map(function (c) { c.getGUIObjects().map(function (o) { o.x -= dxScene; }) });
+
+            scene.checkCollisions([player, chased]);
+            if (collision(player.getGUIObject(), chased.getGUIObject())) {
+                end Game
+            }
+
+            player.update();
             scene.update();
             scene.checkCollisions(player.getGUIObject());
             hud.updateBreath(breath);
@@ -101,11 +122,16 @@ function Game() {
         }
     };
 
+
+    this.jump = function () {
+        if (player.getYPos() > TOP_DIST - PINGU_SIZE / 2) player.jump();
+    }
+
     var handleKeypress = function (event) {
         if (event.key || event.keyCode) {
             switch (event.keyCode) {
-                case 32: // SPACE
-                    if (player.getYPos() > TOP_DIST - PINGU_SIZE / 2) player.jump();
+                case 32: //SPACE
+                    self.jump();
                     break;
                 case 13: // ENTER
                 case 80: // P
@@ -134,4 +160,5 @@ function Game() {
     // preferable in a very limited domain
     this.getComputerPenguinState = function () { return 0 };
 
+    this.getKeyboardHandler = function () { return handleKeypress; };
 }

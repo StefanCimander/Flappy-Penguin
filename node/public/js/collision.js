@@ -7,4 +7,5 @@ function collision(elem1, elem2) {
 
 function collide(player, obstacle) {
     obstacle.alpha = 0.4;
+    player.stun(STUN_DURATION);
 }

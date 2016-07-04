@@ -77,9 +77,8 @@ function Scene(width, height) {
         obstacle.scaleX *= STAGE_XSCALE;
     }
 
-    this.update = function () {
+    this.update = function (dt) {
         obstacles.map(function (obstacle) {
-            obstacle.x -= 1;
             if (obstacle.x < -1 * MAX_OBSTACLE_SIZE)
                 respawnObstacle(obstacle);
         });
@@ -91,10 +90,14 @@ function Scene(width, height) {
         });
     };
 
-    this.checkCollisions = function (player) {
-        obstacles.map(function (obstacle) {
-            if (collision(player, obstacle))
-                collide(player, obstacle);
+    this.checkCollisions = function (objects) {
+        objects.map(function (o) {
+            obstacles.map(function (obstacle) {
+                if (obstacle.alpha === 1 && collision(o.getGUIObject(), obstacle))
+                    collide(o, obstacle);
+            });
         });
-    };
-}
+    }
+
+    this.getGUIObjects = function () { return obstacles; };
+};
