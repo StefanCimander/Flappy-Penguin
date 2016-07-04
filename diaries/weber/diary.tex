@@ -101,4 +101,17 @@
 
         With this we are now able to decrease the breath-meter when the user breathes while the penguin is beneath the water surface and increase it when it is above.
 
+
+\section{Week 2 (7/4/16 - 7/10/16)}
+    This weeks tasks:
+    \begin{itemize}
+        \item Controller integration
+        \item QLearning
+    \end{itemize}
+
+    \subsection{Controller integration}
+        Again using Socket.IO we now send both the breath input from the breathing sensor and the jump command from the physical controller from Arduino to our web page.
+
+    \subsection{QLearning}
+    Q-learning is used for a second penguin swimming away from the player penguin. This penguin swims at a steady pace unless it bumps into an ice-block. This will slow it down, allowing the chasing player penguin to catch up. The controls of this second penguin are learned with the goal of escaping the player.
 \end{document}
