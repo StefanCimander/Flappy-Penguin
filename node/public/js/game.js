@@ -1,6 +1,6 @@
 ﻿/**
  * keeper of the game State (init, paused, runing)
- * @returns {} 
+ * @returns {}
  */
 function Game() {
     var self = this;
@@ -79,5 +79,9 @@ function Game() {
     this.breathe = function () {
         breath = (player.getYPos() < TOP_DIST - PINGU_SIZE / 4) ? Math.min(MAX_BREATH, breath + BREATH_REPLENISH_RATE)
                                                                 : breath = Math.max(0, breath - BREATH_DECREASE_RATE);
+    }
+
+    this.jummp = function () {
+        if (player.getYPos() > TOP_DIST - PINGU_SIZE / 2) player.jump();
     }
 }

@@ -28,6 +28,8 @@ io.on('connection', (iosocket) => {
     console.log("Socket IO connection established.")
 });
 
+const ARDUINO_DATA_BREATH = 0x01;
+const ARDUINO_DATA_JUMP = 0x02;
 
 var arduino = new SerialPort(sport, {
     baudRate: 9600,
@@ -41,35 +43,17 @@ var arduino = new SerialPort(sport, {
     console.log('Error: \n\t' + e);
 }).on('data', (data) => {
     console.log("Data from Arduino: " + data);
-    if (data == 'Breathing OUT finished' || data == 'Breathing OUT finished\n') {
-        console.log("yay");
-        io.emit('arduino-data', { breath: true });
+    var jsonData = JSON.parse(data);
+    switch (jsonData.type) {
+        case ARDUINO_DATA_BREATH:
+            io.emit('breath', { type: ARDUINO_DATA_BREATH, breath: true });
+            break;
+        case ARDUINO_DATA_JUMP:
+            io.emit('jump', { type: ARDUINO_DATA_JUMP, jump: true });
+            break;
     }
-    // rsocket.write(data);
 });
-/*
-var r_server = net.createServer((rsocket) => {
-    console.log("R-Server");
-    rsocket.on('data', (data) => {
-        console.log("Data from R: " + data);
-        io.emit('beat', {});
-        // io.emit('r-data', { data: data });
-        arduino.write("0", (err, size) => {
-            if (err) {
-                console.log("Error: ", err);
-            } else {
-                console.log("Wrote ", size, " bytes to serialport.");
-            }
-        });
-    }).on('open', () => {
-        console.log('R-Server opened');
-    }).on('close', () => {
-        console.log('R-Server closed');
-    }).on('error', (e) => {
-        console.log('ERROR: ' + e);
-    });
-});
-*/
+
 app.listen(webport, () => {
     var address = app.address();
     console.log("Web-Server at %j", address);
