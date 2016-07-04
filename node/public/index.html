@@ -37,9 +37,12 @@
             createjs.Ticker.setInterval(1000 / FPS);
             createjs.Ticker.addEventListener('tick', function () {
                 game.stage.update();
+            });
+
+            window.setInterval(function () {
                 if (!game.isPaused())
                     qlearner.learn();
-            }); //need to declare a new function to scope 'this' reference
+            }, 256);
 
             var socket = io('127.0.0.1:3000');
             window.socket = socket;

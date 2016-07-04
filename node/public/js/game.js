@@ -88,8 +88,14 @@ function Game() {
         if (player.getYPos() > TOP_DIST - PINGU_SIZE / 2) player.jump();
     }
 
+    // Returns true when computer penguin is currently colliding with an ice cube
     this.computerPenguinCollided = function () { return true; };
+
+    // Makes the computer penguin jump
     this.computerPenguinJump = function () {};
+
+    // Encodes position of the computer controlled penguin and the (relevant) obstacles
+    // preferable in a very limited domain
     this.getComputerPenguinState = function () { return 0 };
 
 }
