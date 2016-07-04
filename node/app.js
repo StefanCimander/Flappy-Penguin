@@ -45,31 +45,7 @@ var arduino = new SerialPort(sport, {
         console.log("yay");
         io.emit('arduino-data', { breath: true });
     }
-    // rsocket.write(data);
-});
-/*
-var r_server = net.createServer((rsocket) => {
-    console.log("R-Server");
-    rsocket.on('data', (data) => {
-        console.log("Data from R: " + data);
-        io.emit('beat', {});
-        // io.emit('r-data', { data: data });
-        arduino.write("0", (err, size) => {
-            if (err) {
-                console.log("Error: ", err);
-            } else {
-                console.log("Wrote ", size, " bytes to serialport.");
-            }
-        });
-    }).on('open', () => {
-        console.log('R-Server opened');
-    }).on('close', () => {
-        console.log('R-Server closed');
-    }).on('error', (e) => {
-        console.log('ERROR: ' + e);
-    });
-});
-*/
+
 app.listen(webport, () => {
     var address = app.address();
     console.log("Web-Server at %j", address);
