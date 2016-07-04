@@ -16,6 +16,7 @@
     <script src="js/PauseScreen.js"></script>
     <script src="js/Scene.js"></script>
     <script src="js/Game.js"></script>
+    <script src="js/QLearner.js"></script>
     <script src="js/collision.js"></script>
 
 
@@ -30,9 +31,15 @@
 
             document.addEventListener('keydown', game.getKeyboardHandler());
 
+            var qlearner = new QLearner(game);
+
             createjs.Ticker.setFPS(FPS);
             createjs.Ticker.setInterval(1000 / FPS);
-            createjs.Ticker.addEventListener('tick', function () { game.stage.update(); }); //need to declare a new function to scope 'this' reference
+            createjs.Ticker.addEventListener('tick', function () {
+                game.stage.update();
+                if (!game.isPaused())
+                    qlearner.learn();
+            }); //need to declare a new function to scope 'this' reference
 
             var socket = io('127.0.0.1:3000');
             window.socket = socket;

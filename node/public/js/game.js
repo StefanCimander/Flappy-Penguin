@@ -5,13 +5,14 @@
 function Game() {
     var self = this;
 
-    this.stage = new createjs.Stage('stage');
+    this.stage  = new createjs.Stage('stage');
 
     var scene   = new Scene(self.stage.canvas.width, self.stage.canvas.height);
     var hud     = new HUD(self.stage.canvas.width, self.stage.canvas.height);
     var player  = new Player(self.stage.canvas.width, self.stage.canvas.height);
 
     var paused = true;
+    var gameover = false;
     var breath = MAX_BREATH;
     var score = 0;
 
@@ -41,6 +42,8 @@ function Game() {
         setupGame();
     }
 
+    this.isPaused = function () { return paused; };
+    this.isGameOver = function () { return gameover; };
 
     this.gameUpdate = function () {
         if (!paused) {
@@ -81,7 +84,12 @@ function Game() {
                                                                 : breath = Math.max(0, breath - BREATH_DECREASE_RATE);
     }
 
-    this.jummp = function () {
+    this.jump = function () {
         if (player.getYPos() > TOP_DIST - PINGU_SIZE / 2) player.jump();
     }
+
+    this.computerPenguinCollided = function () { return true; };
+    this.computerPenguinJump = function () {};
+    this.getComputerPenguinState = function () { return 0 };
+
 }
