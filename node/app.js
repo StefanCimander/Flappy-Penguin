@@ -28,6 +28,8 @@ io.on('connection', (iosocket) => {
     console.log("Socket IO connection established.")
 });
 
+const ARDUINO_DATA_BREATH = 0x01;
+const ARDUINO_DATA_JUMP = 0x02;
 
 var arduino = new SerialPort(sport, {
     baudRate: 9600,
@@ -41,10 +43,16 @@ var arduino = new SerialPort(sport, {
     console.log('Error: \n\t' + e);
 }).on('data', (data) => {
     console.log("Data from Arduino: " + data);
-    if (data == 'Breathing OUT finished' || data == 'Breathing OUT finished\n') {
-        console.log("yay");
-        io.emit('arduino-data', { breath: true });
+    var jsonData = JSON.parse(data);
+    switch (jsonData.type) {
+        case ARDUINO_DATA_BREATH:
+            io.emit('breath', { type: ARDUINO_DATA_BREATH, breath: true });
+            break;
+        case ARDUINO_DATA_JUMP:
+            io.emit('jump', { type: ARDUINO_DATA_JUMP, jump: true });
+            break;
     }
+});
 
 app.listen(webport, () => {
     var address = app.address();

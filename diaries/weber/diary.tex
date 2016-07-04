@@ -5,7 +5,7 @@
 
 \begin{document}
 
-\section{Week 1 (6/21/16 - 6/27/16)}
+\section{Week 1 (6/20/16 - 6/26/16)}
     This weeks tasks:
     \begin{itemize}
         \item Idea generation
@@ -18,9 +18,9 @@
         \begin{itemize}
             \item Game
             \item Heartbeat or breathing sensor
-            \item ``Physical computing''
+            \item Physical computing
             \item Q-learning
-            \item ``Affective computing''
+            \item Affective computing or soma-aesthetics
         \end{itemize}
 
         \subsubsection{Final Concept: Flappy Penguin (working name)}
@@ -45,6 +45,11 @@
     \subsection{Early drafts}
         See Fig. \ref{fig:concepts}
         \begin{figure}[h]
+            \subfloat[Sketches]{
+                \includegraphics[width=0.45\textwidth]{img/01_sketches.png}
+            }
+            \caption{Concept}
+            \label{fig:concepts}
             \subfloat[Mockup]{
                 \includegraphics[width=0.45\textwidth]{img/02_mockup.png}
             }
@@ -72,5 +77,28 @@
             \caption{Screenshots of different iterations}
             \label{fig:prototype_screenshots}
         \end{figure}
+
+\section{Week 2 (6/27/16 - 7/3/16)}
+    This weeks tasks:
+    \begin{itemize}
+        \item Incremental improvements of the game
+        \item Breathing sensor integration
+        \item Bend sensor integration
+    \end{itemize}
+
+    \subsection{Game improvements}
+        By now the game includes the following components
+        \begin{itemize}
+            \item Basic scene layout
+            \item Jumping by keyboard input
+            \item Random obstacle generation
+            \item Obstacle collision
+            \item Breath and Breath GUI
+            \item Pausing
+        \end{itemize}
+
+        Using a\em NodeJS\em server data is sent from the\em Arduino\em to the game via \em Socket.IO\em.
+
+        With this we are now able to decrease the breath-meter when the user breathes while the penguin is beneath the water surface and increase it when it is above.
 
 \end{document}
