@@ -7,6 +7,8 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/easeljs-0.8.2.min.js"></script>
+    <script src="http://code.createjs.com/soundjs-0.6.1.min.js"></script>
+    <script src="http://code.createjs.com/preloadjs-0.6.1.min.js"></script>
 
     <script src="js/config.js"></script>
     <script src="js/assets.js"></script>
@@ -22,7 +24,21 @@
 
     <!-- ReSharper disable once Html.EventNotResolved createjs.Ticker.addEventListener('tick',..)-->
     <script>
+
+
         window.addEventListener('load', function (e) {
+            var queue = new createjs.LoadQueue();
+            queue.installPlugin(createjs.Sound);
+            queue.loadManifest([
+                {id:"bg", src:"assets/bensound-slowmotion.mp3"}
+            ]);
+            queue.addEventListener("fileload", function (e) {
+                createjs.Sound.play("bg");
+                console.log("done");
+
+            });
+            console.log(queue);
+
             var canvas = document.getElementById('stage');
             canvas.width = document.body.getBoundingClientRect().width;
             canvas.height = document.body.getBoundingClientRect().height * 0.8;
@@ -44,6 +60,7 @@
                     qlearner.learn();
             }, 256);
 
+            /*
             var socket = io('127.0.0.1:3000');
             window.socket = socket;
             socket.on('breath', function(data) {
@@ -57,6 +74,7 @@
                     game.jump();
                 }
             })
+            */
 
             window.setInterval( game.gameUpdate, 1000 / UPDATE_RATE);
         });

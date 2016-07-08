@@ -1,8 +1,8 @@
 ﻿/**
  * the scene object contains and manages all objects that act passively in the game (e.g. obstacles)
- * @param {width of the scene} width 
- * @param {height of the scene} height 
- * @returns {Initialised Scene object. Needs to be manually registered for rendering by calling .registerForRender} 
+ * @param {width of the scene} width
+ * @param {height of the scene} height
+ * @returns {Initialised Scene object. Needs to be manually registered for rendering by calling .registerForRender}
  */
 function Scene(width, height) {
     var bg = new createjs.Shape();
@@ -25,7 +25,7 @@ function Scene(width, height) {
             array[i].scaleX = array[i].scaleY;
             array[i].alpha = flavor ? 0.1 : 1;
         }
-    }
+    };
 
     //constructor code
     {
@@ -48,15 +48,15 @@ function Scene(width, height) {
 
         flavorObstacles.map(function (x) { stage.addChild(x); });
         obstacles.map(function (x) {stage.addChild(x);});
-    }
+    };
 
     this.registerForRenderForeground = function (stage) {
         stage.addChild(water);
         stage.addChild(reflection);
-    }
+    };
 
 
-    var respawnObstacle = function (obstacle) {
+    function respawnObstacle(obstacle) {
         obstacle.y = TOP_DIST / 2 + Math.floor(Math.random() * (height - TOP_DIST));
         obstacle.x = width + Math.random() * MAX_OBSTACLE_SIZE;
         obstacle.rotation = Math.random() * 2 * OBSTACLE_ROTATION - OBSTACLE_ROTATION;
@@ -66,7 +66,8 @@ function Scene(width, height) {
         obstacle.scaleX *= STAGE_XSCALE;
         obstacle.alpha = 1;
     }
-    var respawnBackgroundObstacle = function (obstacle) {
+
+    function respawnBackgroundObstacle(obstacle) {
         obstacle.y = TOP_DIST + Math.floor(Math.random() * (height - TOP_DIST));
         obstacle.x = width + Math.random() * MAX_OBSTACLE_SIZE;
         obstacle.rotation = Math.random() * 2 * OBSTACLE_ROTATION - OBSTACLE_ROTATION;
@@ -88,12 +89,12 @@ function Scene(width, height) {
             if (obstacle.x < -1 * MAX_OBSTACLE_SIZE)
                 respawnBackgroundObstacle(obstacle);
         });
-    }
+    };
 
     this.checkCollisions = function (player) {
         obstacles.map(function (obstacle) {
             if (collision(player, obstacle))
                 collide(player, obstacle);
         });
-    }
-};
+    };
+}
