@@ -120,9 +120,8 @@ function Game() {
         }
     };
 
-
     this.jump = function () {
-        if (player.getYPos() > TOP_DIST - PINGU_SIZE / 2) player.jump();
+        player.jump();
     };
 
     var handleKeypress = function (event) {
@@ -144,10 +143,6 @@ function Game() {
         }
     };
 
-    this.jump = function () {
-        if (player.getYPos() > TOP_DIST - PINGU_SIZE / 2) player.jump();
-    };
-
     // Returns true when computer penguin is "currently" {in the last tick? since the last call? called every tick?} colliding with an ice cube
     this.computerPenguinCollided = function () { return chased.isColliding(scene.getObstacles()); };
 
@@ -157,13 +152,13 @@ function Game() {
     // Encodes{how?} position of the computer controlled penguin and the (relevant{?}) obstacles
     // preferable in a very limited domain{?}
     this.getComputerPenguinState = function () {
-        var x = chased.x();
-        var y = chased.y();
+        var x = chased.getXPos();
+        var y = chased.getYPos();
         var obstaclesState = 0;
         for (var i = 0; i < 16; i++) {
             if (scene.obstacleAt(
                 Math.floor(i / 6) * (self.stage.canvas.width - x) / 4,
-                TOP_DIST + (1 + i % 4) * (self.stage.canvas.height - TOP_DIST) / 5
+                TOP_DIST + (i % 4) * (self.stage.canvas.height - TOP_DIST) / 4
             )) {
                 obstaclesState |= 1;
             }

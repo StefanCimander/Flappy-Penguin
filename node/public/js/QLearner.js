@@ -2,7 +2,7 @@ function QLearner(game, alp, eps, gam, reward, punishment, qtab) {
     var self = this;
 
     const REWARD      = reward      ||  1,
-          PUNISHMENT  = punishment  || -1,
+          PUNISHMENT  = punishment  || -10,
           epsilon     = eps         || 0.1,
           gamma       = gam         || 0.6,
           alpha       = alp         || 0.2;

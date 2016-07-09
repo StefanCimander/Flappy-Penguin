@@ -32,16 +32,16 @@ function Player(width, height, spawnX, spawnY, gender, diver) {
         }
     };
 
-    this.x = function() { return penguin.x; };
-    this.y = function() { return penguin.y; };
-
     this.stun = function (duration) {
         console.log("stunned " + duration);
         stunned = true;
         stunremain = duration;
     };
 
-    this.jump = function () { yVelocity = JUMP_SPEED; };
+    this.jump = function () {
+        if (penguin.y > TOP_DIST - PINGU_SIZE / 2)
+            yVelocity = JUMP_SPEED;
+    };
 
     this.getYPos = function () { return penguin.y; };
     this.getXPos = function () { return penguin.x; };
