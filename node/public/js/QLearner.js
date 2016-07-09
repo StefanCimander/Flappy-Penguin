@@ -1,11 +1,11 @@
-function QLearner(game, alpha, epsilon, gamma, reward, punishment, qtab) {
-    var self = this
+function QLearner(game, alp, eps, gam, reward, punishment, qtab) {
+    var self = this;
 
-    var REWARD      = reward        ||  1,
-        PUNISHMENT  = punishment    || -1,
-        epsilon     = epsilon       || 0.1,
-        gamma       = gamma         || 0.6,
-        alpha       = alpha         || 0.2;
+    const REWARD      = reward      ||  1,
+          PUNISHMENT  = punishment  || -1,
+          epsilon     = eps         || 0.1,
+          gamma       = gam         || 0.6,
+          alpha       = alp         || 0.2;
 
     var qtable = qtab || {};
     window.qtable = qtable;
@@ -61,13 +61,13 @@ function QLearner(game, alpha, epsilon, gamma, reward, punishment, qtab) {
     }
 
 
-    function reward() {
+    function rewardFunction() {
         return failed() ? PUNISHMENT : REWARD;
     }
 
     function qlearn(curr, next, action) {
         var oldQ = qval(curr, action);
-        var newQ = oldQ + alpha * (reward() + gamma * getBestActionQ(next) - oldQ);
+        var newQ = oldQ + alpha * (rewardFunction() + gamma * getBestActionQ(next) - oldQ);
         update(curr, action, newQ);
     }
 
@@ -75,13 +75,12 @@ function QLearner(game, alpha, epsilon, gamma, reward, punishment, qtab) {
     var lastState = getState();
 
     this.learn = function () {
-        console.log("learning");
         var state = getState();
         qlearn(lastState, state, lastAction);
         var action = nextAction(state);
         if (action) jump();
         lastAction = action;
         lastState = state;
-    }
+    };
 
 }

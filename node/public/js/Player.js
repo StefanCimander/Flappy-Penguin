@@ -1,6 +1,8 @@
 ﻿
-function Player(width, height, spawnX, spawnY, gender) {
-    var penguin = new createjs.Bitmap(gender === GENDER_MALE ? MALE_PENGUIN_SPRITE : FEMALE_PENGUIN_SPRITE);
+function Player(width, height, spawnX, spawnY, gender, diver) {
+    var penguin = new createjs.Bitmap(gender === GENDER_MALE ?
+            (diver ? MALE_PENGUIN_DIVER_SPRITE : MALE_PENGUIN_SPRITE) :
+            (diver ? FEMALE_PENGUIN_DIVER_SPRITE : FEMALE_PENGUIN_SPRITE));
 
 
     var yVelocity = -1;
@@ -21,14 +23,17 @@ function Player(width, height, spawnX, spawnY, gender) {
     this.update = function(dt)
     {
         if (!stunned) {
-            yVelocity = Math.max(yVelocity - YVELOCITY_DECREASE * dt, -MAX_DROP_SPEED);
+            yVelocity = Math.max(yVelocity - YVELOCITY_DECREASE * dt, - MAX_DROP_SPEED);
             penguin.y = Math.min(penguin.y - yVelocity * dt, height - PINGU_SIZE);
             penguin.x += SCENE_X_SPEED * dt;
         } else {
             stunremain -= dt;
             stunned = stunremain > 0;
         }
-    }
+    };
+
+    this.x = function() { return penguin.x; };
+    this.y = function() { return penguin.y; };
 
     this.stun = function (duration) {
         console.log("stunned " + duration);
@@ -36,17 +41,27 @@ function Player(width, height, spawnX, spawnY, gender) {
         stunremain = duration;
     };
 
-    this.jump = function () { yVelocity = JUMP_SPEED };
+    this.jump = function () { yVelocity = JUMP_SPEED; };
 
     this.getYPos = function () { return penguin.y; };
     this.getXPos = function () { return penguin.x; };
     this.getGUIObjects = function () { return [penguin]; };
-    this.getGUIObject = function () { return penguin; }
+    this.getGUIObject = function () { return penguin; };
 
     /**
-     * queries if the player-object collided with an obstacle in the last tick.
-     * only eligible to call after all "check collision" operations ran and before any update() operation takes place
-     * @returns {true: did just collide; false: did not collide in the last tick} 
+     * queries if the player-object is colliding with an obstacle.
+     * @returns {true: colliding; false: not colliding}
      */
-    this.didJustCollide = function () { return stunremain === STUN_DURATION;}
+    this.isColliding = function (obstacles) {
+        var obs = obstacles.filter(function (o) {
+            var bounds = o.getTransformedBounds();
+            return bounds.x + bounds.width > penguin.x;
+        });
+        for (var i = 0; i < obs.length; i++) {
+            if (collision(penguin, obs[i])) {
+                return true;
+            }
+        }
+        return false;
+    };
 }

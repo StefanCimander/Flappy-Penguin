@@ -10,7 +10,10 @@ function Game() {
     var scene   = new Scene(self.stage.canvas.width, self.stage.canvas.height);
     var hud     = new HUD(self.stage.canvas.width, self.stage.canvas.height);
     var player = new Player(self.stage.canvas.width, self.stage.canvas.height, self.stage.canvas.width / 4 - PINGU_SIZE, self.stage.canvas.height / 2, GENDER_MALE);
-    var chased = new Player(self.stage.canvas.width, self.stage.canvas.height, self.stage.canvas.width * 3 / 4 - PINGU_SIZE, self.stage.canvas.height / 2, GENDER_FEMALE);
+    var chased = new Player(self.stage.canvas.width,
+                            self.stage.canvas.height,
+                            self.stage.canvas.width * 3 / 4 - PINGU_SIZE,
+                            self.stage.canvas.height / 2, GENDER_FEMALE, true);
 
     var bubbles = [];
     var paused = true;
@@ -52,7 +55,7 @@ function Game() {
     this.gameUpdate = function () {
         var dt = (Date.now() - timestamp) / 1000;
         timestamp = Date.now();
-        
+
         if (!paused) {
             score += dt;
 
@@ -62,7 +65,7 @@ function Game() {
 
             var dxScene = player.getXPos() - playerOldX;
             scene.update(dt);
-            
+
             if (dxScene > 0)
                 [scene, player, chased].map(function (c) { c.getGUIObjects().map(function (o) { o.x -= dxScene; }) });
 
@@ -120,7 +123,7 @@ function Game() {
 
     this.jump = function () {
         if (player.getYPos() > TOP_DIST - PINGU_SIZE / 2) player.jump();
-    }
+    };
 
     var handleKeypress = function (event) {
         if (event.key || event.keyCode) {
@@ -145,16 +148,32 @@ function Game() {
         if (player.getYPos() > TOP_DIST - PINGU_SIZE / 2) player.jump();
     };
 
-
     // Returns true when computer penguin is "currently" {in the last tick? since the last call? called every tick?} colliding with an ice cube
-    this.computerPenguinCollided = function () { return chased.didJustCollide(); };
+    this.computerPenguinCollided = function () { return chased.isColliding(scene.getObstacles()); };
 
     // Makes the computer penguin jump
-    this.computerPenguinJump = function () { chased.jump()};
+    this.computerPenguinJump = function () { chased.jump(); };
 
     // Encodes{how?} position of the computer controlled penguin and the (relevant{?}) obstacles
     // preferable in a very limited domain{?}
-    this.getComputerPenguinState = function () { return 0 }; 
+    this.getComputerPenguinState = function () {
+        var x = chased.x();
+        var y = chased.y();
+        var obstaclesState = 0;
+        for (var i = 0; i < 16; i++) {
+            if (scene.obstacleAt(
+                Math.floor(i / 6) * (self.stage.canvas.width - x) / 4,
+                TOP_DIST + (1 + i % 4) * (self.stage.canvas.height - TOP_DIST) / 5
+            )) {
+                obstaclesState |= 1;
+            }
+            obstaclesState = obstaclesState << 1;
+        }
+
+        var discreetYPos = Math.floor(y / self.stage.canvas.height * 64);
+
+        return (obstaclesState << 6) | discreetYPos;
+    };
 
     this.getKeyboardHandler = function () { return handleKeypress; };
 }

@@ -12,6 +12,8 @@ function Scene(width, height) {
     var obstacles = [];
     var flavorObstacles = [];
 
+    this.getObstacles = function () { return obstacles; };
+
     var generateObstacles = function (array, count, flavor) {
         for (var i = 0; i < count; i++) {
             array[i] = new createjs.Shape();
@@ -53,6 +55,13 @@ function Scene(width, height) {
     this.registerForRenderForeground = function (stage) {
         stage.addChild(water);
         stage.addChild(reflection);
+    };
+
+    this.obstacleAt = function (x, y) {
+        for (var i = 0; i < obstacles.length; i++) {
+            if (obstacles[i].getTransformedBounds().contains(x,y)) return true;
+        }
+        return false;
     };
 
 
@@ -97,7 +106,7 @@ function Scene(width, height) {
                     collide(o, obstacle);
             });
         });
-    }
+    };
 
     this.getGUIObjects = function () { return obstacles; };
 };
