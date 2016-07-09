@@ -42,4 +42,11 @@ function Player(width, height, spawnX, spawnY, gender) {
     this.getXPos = function () { return penguin.x; };
     this.getGUIObjects = function () { return [penguin]; };
     this.getGUIObject = function () { return penguin; }
+
+    /**
+     * queries if the player-object collided with an obstacle in the last tick.
+     * only eligible to call after all "check collision" operations ran and before any update() operation takes place
+     * @returns {true: did just collide; false: did not collide in the last tick} 
+     */
+    this.didJustCollide = function () { return stunremain === STUN_DURATION;}
 }

@@ -68,12 +68,9 @@ function Game() {
 
             scene.checkCollisions([player, chased]);
             if (collision(player.getGUIObject(), chased.getGUIObject())) {
-                end Game
+                //end Game
             }
 
-            player.update();
-            scene.update();
-            scene.checkCollisions(player.getGUIObject());
             hud.updateBreath(breath);
             bubbles.map(function (bubble, i) {
                 bubble.rotation += 0.1;
@@ -109,8 +106,6 @@ function Game() {
         self.stage.removeChild(bubble);
         // TODO: Remove from bubbles array
     }
-
-    this.getKeyboardHandler = function () { return handleKeypress; };
 
     this.breathe = function () {
         if (!paused) {
@@ -150,15 +145,16 @@ function Game() {
         if (player.getYPos() > TOP_DIST - PINGU_SIZE / 2) player.jump();
     };
 
-    // Returns true when computer penguin is currently colliding with an ice cube
-    this.computerPenguinCollided = function () { return true; };
+
+    // Returns true when computer penguin is "currently" {in the last tick? since the last call? called every tick?} colliding with an ice cube
+    this.computerPenguinCollided = function () { return chased.didJustCollide(); };
 
     // Makes the computer penguin jump
-    this.computerPenguinJump = function () {};
+    this.computerPenguinJump = function () { chased.jump()};
 
-    // Encodes position of the computer controlled penguin and the (relevant) obstacles
-    // preferable in a very limited domain
-    this.getComputerPenguinState = function () { return 0 };
+    // Encodes{how?} position of the computer controlled penguin and the (relevant{?}) obstacles
+    // preferable in a very limited domain{?}
+    this.getComputerPenguinState = function () { return 0 }; 
 
     this.getKeyboardHandler = function () { return handleKeypress; };
 }
