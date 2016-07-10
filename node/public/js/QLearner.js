@@ -1,4 +1,4 @@
-function QLearner(game, alp, eps, gam, reward, punishment, qtab) {
+function QLearner(failed, performAction, getState, alp, eps, gam, reward, punishment, qtab) {
     var self = this;
 
     const REWARD      = reward      ||  1,
@@ -15,18 +15,6 @@ function QLearner(game, alp, eps, gam, reward, punishment, qtab) {
             qtable[state] = { jump: Math.random() / 2 + 0.75, stay: Math.random() / 2 + 0.75 };
         }
         return qtable[state];
-    }
-
-    function failed() {
-        return game.computerPenguinCollided();
-    }
-
-    function jump() {
-        game.computerPenguinJump();
-    }
-
-    function getState() {
-        return game.getComputerPenguinState();
     }
 
     function getBestAction(state) {
@@ -60,7 +48,6 @@ function QLearner(game, alp, eps, gam, reward, punishment, qtab) {
         return action ? actions.jump : actions.stay;
     }
 
-
     function rewardFunction() {
         return failed() ? PUNISHMENT : REWARD;
     }
@@ -72,15 +59,21 @@ function QLearner(game, alp, eps, gam, reward, punishment, qtab) {
     }
 
     var lastAction = false;
-    var lastState = getState();
+    var lastState  = NaN;
 
     this.learn = function () {
         var state = getState();
         qlearn(lastState, state, lastAction);
         var action = nextAction(state);
-        if (action) jump();
+        if (action) performAction();
         lastAction = action;
         lastState = state;
     };
 
+
+    this.lastUpdate = function () {
+        var obj = {};
+        obj[lastState] = qtable[lastState];
+        return obj;
+    };
 }

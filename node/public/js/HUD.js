@@ -18,10 +18,10 @@ function HUD(width, height) {
             bubble.scaleY = 0.5;
             bubble.x = width - 96;
             bubble.y = height - 64 - i * 48;
-            breathBubbles[i] = bubble;
+            breathBubbles.push(bubble);
         }
     }
-    
+
     this.registerForRender = function (stage) {
         stage.addChild(score);
 
@@ -29,21 +29,22 @@ function HUD(width, height) {
 
         stage.addChild(pauseScreen);
         stage.addChild(pauseText);
-    }
+    };
 
     this.updateBreath = function (breath) {
         for (var i = 0; i < MAX_BREATH; i++) {
             breathBubbles[i].alpha = (breath < i) ? 0 : (breath >= i + 1) ? 1 : breath - Math.floor(breath);
         }
-    }
+    };
 
     this.pause = function (stage) {
         stage.addChild(pauseScreen);
         stage.addChild(pauseText);
-    }
+    };
+
     this.unpause = function (stage) {
         stage.removeChild(pauseScreen);
         stage.removeChild(pauseText);
-    }
+    };
 
-};
+}

@@ -1,20 +1,24 @@
 ﻿/**
  * the scene object contains and manages all objects that act passively in the game (e.g. obstacles)
- * @param {width of the scene} width
- * @param {height of the scene} height
+ * @param {stage object the scene is to be drawn on} stage
  * @returns {Initialised Scene object. Needs to be manually registered for rendering by calling .registerForRender}
  */
-function Scene(width, height) {
+function Scene(stage) {
+    var width = stage.canvas.width;
+    var height = stage.canvas.height;
+
     var bg = new createjs.Shape();
     var water = new createjs.Shape();
     var reflection = new createjs.Shape();
 
     var obstacles = [];
     var flavorObstacles = [];
+    var shards = [];
+    var bubbles = [];
 
     this.getObstacles = function () { return obstacles; };
 
-    var generateObstacles = function (array, count, flavor) {
+    function generateObstacles(array, count, flavor) {
         for (var i = 0; i < count; i++) {
             array[i] = new createjs.Shape();
             array[i].graphics.beginFill("#fff").drawRect(0, 0, MAX_OBSTACLE_SIZE, MAX_OBSTACLE_SIZE);
@@ -27,7 +31,30 @@ function Scene(width, height) {
             array[i].scaleX = array[i].scaleY;
             array[i].alpha = flavor ? 0.1 : 1;
         }
-    };
+    }
+
+    function addBubbles(n, player) {
+        function addBubble() {
+            var bubble = new createjs.Bitmap(BUBBLE);
+            bubble.x = player.getXPos() + 0.75 * PINGU_SIZE;
+            bubble.y = player.getYPos() + 0.25 * PINGU_SIZE;
+            bubble.scaleX = Math.random() * 0.1 + 0.1;
+            bubble.scaleY = bubble.scaleX;
+            stage.addChild(bubble);
+            bubbles.push(bubble);
+        }
+        for (var i = 0; i < n; i++) {
+            addBubble();
+        }
+    }
+
+    function clearBubble(bubble) {
+        stage.removeChild(bubble);
+        var i = bubbles.indexOf(bubble);
+        i == -1 || delete bubbles[i];
+    }
+
+    this.addBubbles = addBubbles;
 
     //constructor code
     {
@@ -44,15 +71,14 @@ function Scene(width, height) {
         generateObstacles(flavorObstacles, 8, true);
     }
 
-    this.registerForRenderBackground = function(stage)
-    {
+    this.registerForRenderBackground = function() {
         stage.addChild(bg);
 
         flavorObstacles.map(function (x) { stage.addChild(x); });
         obstacles.map(function (x) {stage.addChild(x);});
     };
 
-    this.registerForRenderForeground = function (stage) {
+    this.registerForRenderForeground = function () {
         stage.addChild(water);
         stage.addChild(reflection);
     };
@@ -86,27 +112,68 @@ function Scene(width, height) {
         obstacle.scaleX *= STAGE_XSCALE;
     }
 
-    this.update = function (dt) {
+    this.update = function (dx) {
         obstacles.map(function (obstacle) {
             if (obstacle.x < -1 * MAX_OBSTACLE_SIZE)
                 respawnObstacle(obstacle);
         });
 
         flavorObstacles.map(function (obstacle, i) {
-            obstacle.x -= (i * 0.5 + 0.75) / 2;
+            obstacle.x -= (i * 0.1 + 0.75) / 2;
             if (obstacle.x < -1 * MAX_OBSTACLE_SIZE)
                 respawnBackgroundObstacle(obstacle);
         });
+
+        // Moves bubbles irregularly upwards
+        bubbles.map(function (bubble, i) {
+            bubble.rotation += 0.1;
+            bubble.alpha    -= 0.001;
+            bubble.x        -= 1 + (i % (3 + Math.floor(Math.random() * 3))) * 0.25; // Don't mind this magic-numbering
+            bubble.y        -= 1 + (i % (3 + Math.floor(Math.random() * 7))) * 0.2;
+            bubble.scaleX   *= 1.001;
+            bubble.scaleY    = bubble.scaleX;
+            if (bubble.y < TOP_DIST) clearBubble(bubble);
+        });
+
+        shards.map(function (s) { s.update(dx); });
     };
 
-    this.checkCollisions = function (objects) {
-        objects.map(function (o) {
-            obstacles.map(function (obstacle) {
-                if (obstacle.alpha === 1 && collision(o.getGUIObject(), obstacle))
-                    collide(o, obstacle);
-            });
-        });
-    };
+    /**
+     *  Creates ice-block shards for a given obstacle ice-block.
+     */
+    function shatter(obstacle) {
+        /** Tmp class holding shape object and update method */
+        function Shard(size) {
+            var shape = new createjs.Shape();
+            shape.graphics.beginFill("#fff").drawRect(0, 0, size, size);
+            shape.alpha = 0.8;
+            this.update = function (dx) {
+                    shape.x -= dx < 1 ? 2 : dx;
+                    shape.rotation += Math.random() * 3 - 3;
+                    shape.alpha -= 0.01 * Math.random();
+                    if (shape.alpha <= 0) {
+                        stage.removeChild(shape);
+                        var i = shards.indexOf(this);
+                        delete shards[i];
+                    }
+            };
+            this.getShape = function () { return shape; };
+        }
+
+        function generateShards(n) {
+            for (var i = 0; i < n; i++) {
+                var size =  (Math.random() + 0.5) * obstacle.getTransformedBounds().width / n * 4;
+                var shard = new Shard(size);
+                var shape = shard.getShape();
+                shape.x = obstacle.x + Math.random() * obstacle.getTransformedBounds().width;
+                shape.y = obstacle.y + Math.random() * obstacle.getTransformedBounds().height;
+                stage.addChild(shape);
+                shards.push(shard);
+            }
+        }
+        generateShards(16);
+    }
+    this.shatter = shatter;
 
     this.getGUIObjects = function () { return obstacles; };
-};
+}

@@ -20,45 +20,51 @@
     <script src="js/Game.js"></script>
     <script src="js/QLearner.js"></script>
     <script src="js/collision.js"></script>
+    <script src="js/Audio.js"></script>
 
 
     <!-- ReSharper disable once Html.EventNotResolved createjs.Ticker.addEventListener('tick',..)-->
     <script>
-
-
         window.addEventListener('load', function (e) {
-            var queue = new createjs.LoadQueue();
-            queue.installPlugin(createjs.Sound);
-            queue.loadManifest([
-                {id:"bg", src:"assets/bensound-slowmotion.mp3"}
-            ]);
-            queue.addEventListener("fileload", function (e) {
-                createjs.Sound.play("bg");
-                console.log("done");
+            loadAndPlayBGAudio();
 
-            });
-            console.log(queue);
-
-            var canvas = document.getElementById('stage');
+            var canvas = document.getElementById('stagec');
             canvas.width = document.body.getBoundingClientRect().width;
             canvas.height = document.body.getBoundingClientRect().height * 0.8;
 
             var game = new Game();
 
-            document.addEventListener('keydown', game.getKeyboardHandler());
+            document.addEventListener('keydown', function (event) {
+                if (event.key || event.keyCode) {
+                    switch (event.keyCode) {
+                        case 32: //SPACE
+                            game.jump();
+                            break;
+                        case 13: // ENTER
+                        case 80: // P
+                            game.togglePause();
+                            break;
+                        case 81: // Q
+                            game.breathe();
+                            break;
+                        default:
+                            console.log(event.keyCode);
+                    }
+                }
+            });
 
-            var qlearner = new QLearner(game);
+            var qlearner = new QLearner(
+                game.computerPenguinCollided,
+                game.computerPenguinJump,
+                game.getComputerPenguinState
+            );
 
             createjs.Ticker.setFPS(FPS);
             createjs.Ticker.setInterval(1000 / FPS);
             createjs.Ticker.addEventListener('tick', function () {
                 game.stage.update();
             });
-
-            window.setInterval(function () {
-                if (!game.isPaused())
-                    qlearner.learn();
-            }, 256);
+            window.setInterval( game.gameUpdate, 1000 / UPDATE_RATE);
 
             /*
             var socket = io('127.0.0.1:3000');
@@ -76,11 +82,18 @@
             })
             */
 
-            window.setInterval( game.gameUpdate, 1000 / UPDATE_RATE);
+            window.setInterval(function () {
+                if (!game.isPaused()) {
+                    qlearner.learn();
+                    // socket.emit("qlearn", qlearner.lastUpdate());
+                }
+            }, 250);
+
+
         });
     </script>
 </head>
 <body>
-    <canvas id="stage" width="500" height="512"></canvas>
+    <canvas id="stagec" width="500" height="512"></canvas>
 </body>
 </html>

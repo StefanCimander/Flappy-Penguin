@@ -15,10 +15,10 @@ const FPS                   = 60,
       BREATH_REPLENISH_RATE = 1,
 
       JUMP_SPEED            = 400,
-      YVELOCITY_DECREASE    = 650,
+      YVELOCITY_DECREASE    = 750,
       MAX_DROP_SPEED        = 1950,
       MAX_OBSTACLE_SIZE     = 150,
-      OBSTACLE_ROTATION     = 10;
-    
-      SCENE_X_SPEED         = 120;
+      OBSTACLE_ROTATION     = 10,
+
+      SCENE_X_SPEED         = 120,
       STUN_DURATION         = 1;
