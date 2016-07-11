@@ -10,10 +10,15 @@ function Player(width, height, spawnX, spawnY, gender, diver) {
     var stunremain = 0;
 
     //constructor code
-    {
+    function init() {
+        stunned = false;
+        stunremain = 0;
+        yVelocity = -1;
         penguin.x = spawnX;
         penguin.y = spawnY;
     }
+    init();
+    
 
     this.registerForRender = function (stage) {
         stage.addChild(penguin);
@@ -69,4 +74,6 @@ function Player(width, height, spawnX, spawnY, gender, diver) {
         }
         return false;
     };
+
+    this.reset = function () { init(); };
 }

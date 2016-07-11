@@ -13,3 +13,31 @@ function PauseText(width, height) {
     pauseText.y = height / 2 + 46;
     return pauseText;
 }
+function GameOverText(width, height) {
+    var goText = new createjs.Text("Game Over", "24px Sergoe UI", "#fff");
+    var b = goText.getBounds();
+    
+    var goBg = new createjs.Shape();
+    goBg.graphics.beginFill("#c00").drawRect(-4, -1 ,b.width + 8, b.height + 2);
+
+    var goSprite = new createjs.Container();
+    goSprite.x = (width - b.width) / 2;
+    goSprite.y = (height - b.height) / 2;
+    goSprite.addChild(goBg);
+    goSprite.addChild(goText);
+    return goSprite;
+}
+function GameWonText(width, height) {
+    var goText = new createjs.Text("You Won!", "24px Sergoe UI", "#fff");
+    var b = goText.getBounds();
+    
+    var goBg = new createjs.Shape();
+    goBg.graphics.beginFill("#0c0").drawRect(-4, -1 ,b.width + 8, b.height + 2);
+
+    var goSprite = new createjs.Container();
+    goSprite.x = (width - b.width) / 2;
+    goSprite.y = (height - b.height) / 2;
+    goSprite.addChild(goBg);
+    goSprite.addChild(goText);
+    return goSprite;
+}

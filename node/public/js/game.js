@@ -5,56 +5,94 @@
 function Game() {
     var self = this;
 
+    //Scene and RenderTarget
     this.stage = new createjs.Stage('stagec');
-
-    var scene  = new Scene(self.stage);
-    var hud    = new HUD(self.stage.canvas.width, self.stage.canvas.height);
-    var player = new Player(self.stage.canvas.width,
-                            self.stage.canvas.height,
-                            self.stage.canvas.width / 4 - PINGU_SIZE,
-                            self.stage.canvas.height / 2, GENDER_MALE);
-    var chased = new Player(self.stage.canvas.width,
-                            self.stage.canvas.height,
-                            self.stage.canvas.width * 3 / 4 - PINGU_SIZE,
-                            self.stage.canvas.height / 2, GENDER_FEMALE, true);
-
-    var paused = true;
-    var gameover = false;
-    var breath = MAX_BREATH;
-    var score = 0;
-
-
-    var initStage = function () {
+    function initStage () {
         self.stage.rotation = STAGE_ROTATION;
         self.stage.scaleY = STAGE_XSCALE;
         self.stage.scaleX = STAGE_YSCALE;
         self.stage.removeAllChildren();
     };
 
+    var width = self.stage.canvas.width;
+    var height = self.stage.canvas.height;
+
+    var scene  = new Scene(self.stage);
+    var hud = new HUD(width, height);
+
+    //Game Elements
+    var player = new Player(width, height, width / 4 - PINGU_SIZE, height / 2, GENDER_MALE);
+    var chased = new Player(width, height, width * 3 / 4 - PINGU_SIZE, height / 2, GENDER_FEMALE, true);
+
+    var breath = MAX_BREATH;
+    var score = 0;
+
     var setupGame = function () {
+        player.reset();
+        chased.reset();
+        scene.reset();
+
         breath = MAX_BREATH;
         score = 0;
     };
 
+    //Game State
+    var paused = true;       //refactoring neede, dificult to synch with HUD
+    var gameover = false;
+    
+    this.isPaused = function () { return paused; };
+    this.isGameOver = function () { return gameover; };
+    function pauseGame () {
+        if (!paused) hud.pause();
+        paused = true;
+    }
+    function unpauseGame() {
+        if (paused) hud.unpause();
+        paused = false;
+    }
+    function togglePause() {
+        paused = !paused;
+        if (paused) hud.pause(self.stage);
+        else hud.unpause(self.stage);
+    }
+    function endGameSuccess() {
+        pauseGame();
+        gameover = true;
+        hud.showGameOverSuccess();
+    }
+    function endGameFailure () {
+        pauseGame();
+        gameover = true;
+        hud.showGameOverFailure();
+    }
+    function restartGame () {
+        //assert(self.isPaused());
+        setupGame();
+        hud.clearGameOver();
+        gameover = false;
+    }
+    this.handleKeyPause = function(){
+        if (gameover)
+            restartGame();
+        else {
+            togglePause();
+        }
+    }
 
     //constructor code
     {
         initStage();
+        setupGame();
 
         scene.registerForRenderBackground(self.stage);
         chased.registerForRender(self.stage);
         player.registerForRender(self.stage);
         scene.registerForRenderForeground(self.stage);
         hud.registerForRender(self.stage);
-
-        setupGame();
     }
 
-    this.isPaused = function () { return paused; };
-    this.isGameOver = function () { return gameover; };
 
     var timestamp = Date.now();
-
     this.gameUpdate = function () {
         var dt = (Date.now() - timestamp) / 1000;
         timestamp = Date.now();
@@ -83,22 +121,18 @@ function Game() {
                     }
                 });
             });
+            chased.getGUIObject().x = Math.max(chased.getXPos(), player.getXPos());
 
-            if (collision(player.getGUIObject(), chased.getGUIObject())) {
-                //end Game
-            }
+            if (chased.getXPos() >= width) 
+                endGameFailure();
+            if (collision(player.getGUIObject(), chased.getGUIObject())) 
+                endGameSuccess();
 
             hud.updateBreath(breath);
         }
     };
 
-    function togglePause() {
-        paused = !paused;
-        if (paused) hud.pause(self.stage);
-        else hud.unpause(self.stage);
-    }
-    this.togglePause = togglePause;
-
+    
     function checkCollision(object, obstacles, collisionCallback) {
         var colliding = false;
         obstacles.map(function (obstacle) {

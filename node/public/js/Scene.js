@@ -20,7 +20,7 @@ function Scene(stage) {
 
     function generateObstacles(array, count, flavor) {
         for (var i = 0; i < count; i++) {
-            array[i] = new createjs.Shape();
+            if (array[i] == null) array[i] = new createjs.Shape();
             array[i].graphics.beginFill("#fff").drawRect(0, 0, MAX_OBSTACLE_SIZE, MAX_OBSTACLE_SIZE);
             array[i].setBounds(0, 0, MAX_OBSTACLE_SIZE, MAX_OBSTACLE_SIZE);
             array[i].x = (flavor ? 0 : width / 2) + Math.random() * width;
@@ -51,7 +51,7 @@ function Scene(stage) {
     function clearBubble(bubble) {
         stage.removeChild(bubble);
         var i = bubbles.indexOf(bubble);
-        i == -1 || delete bubbles[i];
+        i == -1 || delete bubbles[i];   //what kind of hacky code is this? (btw. VSWarning: use === to prevent coerce
     }
 
     this.addBubbles = addBubbles;
@@ -143,7 +143,7 @@ function Scene(stage) {
      */
     function shatter(obstacle) {
         /** Tmp class holding shape object and update method */
-        function Shard(size) {
+        function Shard(size) {          //TODO: refactor this to be resetable at game reset
             var shape = new createjs.Shape();
             shape.graphics.beginFill("#fff").drawRect(0, 0, size, size);
             shape.alpha = 0.8;
@@ -176,4 +176,9 @@ function Scene(stage) {
     this.shatter = shatter;
 
     this.getGUIObjects = function () { return obstacles; };
+    this.reset = function () {
+        generateObstacles(obstacles, 6, false);
+        generateObstacles(flavorObstacles, 8, true);
+        //TODO: remove shards and Bubles
+    };
 }

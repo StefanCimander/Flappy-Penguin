@@ -1,11 +1,15 @@
 ﻿
 function HUD(width, height) {
+    var self = this;
 
     var score = new createjs.Text("Flappy Penguin", "32px Segoe UI", "#fff");
-    var scoretextBaseline = "alphabetic";                   //TODO @thomas: provide rationale (score.textBaseline?)
     var pauseScreen = PauseScreen(width, height);
     var pauseText = PauseText(width, height);
+    var gameLostText = GameOverText(width, height);
+    var gameWonText = GameWonText(width, height);
     var breathBubbles = [];
+
+    var stage = null;
 
     //constructor code
     {
@@ -22,7 +26,8 @@ function HUD(width, height) {
         }
     }
 
-    this.registerForRender = function (stage) {
+    this.registerForRender = function (renderStage) {
+        stage = renderStage;
         stage.addChild(score);
 
         breathBubbles.map(function (x) {stage.addChild(x);});
@@ -37,14 +42,30 @@ function HUD(width, height) {
         }
     };
 
-    this.pause = function (stage) {
+    this.pause = function () {
         stage.addChild(pauseScreen);
         stage.addChild(pauseText);
     };
 
-    this.unpause = function (stage) {
+    this.unpause = function () {
         stage.removeChild(pauseScreen);
         stage.removeChild(pauseText);
     };
 
+    var goWon = false;
+    var goLost = false;
+    this.showGameOverFailure = function () {
+        goLost = true;
+        stage.addChild(gameLostText);
+    };
+    this.showGameOverSuccess = function () {
+        goWon = true;
+        stage.addChild(gameWonText);
+    };
+    this.clearGameOver = function () {
+        if (goWon) stage.removeChild(gameWonText);
+        if (goLost) stage.removeChild(gameLostText);
+        goWon = false;
+        goLost = false;
+    };
 }

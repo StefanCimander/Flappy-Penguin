@@ -34,7 +34,7 @@
 
             var game = new Game();
 
-            document.addEventListener('keydown', function (event) {
+            document.addEventListener('keydown', function (event) {  //critical architecture: enclosing entity hast to be aware of internal game state
                 if (event.key || event.keyCode) {
                     switch (event.keyCode) {
                         case 32: //SPACE
@@ -42,7 +42,7 @@
                             break;
                         case 13: // ENTER
                         case 80: // P
-                            game.togglePause();
+                            game.handleKeyPause();
                             break;
                         case 81: // Q
                             game.breathe();
