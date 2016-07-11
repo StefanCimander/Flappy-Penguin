@@ -1,0 +1,9 @@
+Konzeptfolien
+
+-- Konzept:     Stressabbau durch Atemübungen
+
+-- Umsetzung:   Hardware -> Pinguin & Atemsensor
+                Software -> Spielobefläche mit Node & Arduino
+                            Q-Learning
+
+-- Ausblick:    Atemtrainer
