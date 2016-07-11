@@ -15,6 +15,13 @@ var serialport = require('serialport'),
                 res.end();
                 return;
             } else {
+                switch (req.url.substr(req.url.indexOf('.'), req.url.length)) {
+                    case '.html': res.setHeader('content-type', 'text/html'); break;
+                    case '.css': res.setHeader('content-type', 'text/css'); break;
+                    case '.js': res.setHeader('content-type', 'application/javascript'); break;
+                    default: console.log(req.url.substr(req.url.indexOf('.'), req.url.length));
+
+                }
                 res.writeHead(200);
                 res.write(data);
                 res.end();
