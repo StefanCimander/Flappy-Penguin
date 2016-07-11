@@ -123,12 +123,12 @@ function Game() {
             });
             chased.getGUIObject().x = Math.max(chased.getXPos(), player.getXPos());
 
-            if (chased.getXPos() >= width) 
+            hud.updateBreath(breath);
+
+            if (chased.getXPos() >= width || breath === 0) 
                 endGameFailure();
             if (collision(player.getGUIObject(), chased.getGUIObject())) 
                 endGameSuccess();
-
-            hud.updateBreath(breath);
         }
     };
 
