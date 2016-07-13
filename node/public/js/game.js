@@ -99,6 +99,7 @@ function Game() {
 
         if (!paused) {
             score += dt;
+            hud.updateScore(score);
 
             var playerOldX = player.getXPos();
             player.update(dt);
