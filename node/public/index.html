@@ -83,7 +83,9 @@
             window.setInterval(function () {
                 if (!game.isPaused()) {
                     qlearner.learn();
-                    // socket.emit("qlearn", qlearner.lastUpdate());
+                    console.log("qlearned");
+                    console.log(qlearner.lastUpdate());
+                    socket.emit('qlearn', qlearner.lastUpdate());
                 }
             }, 250);
 
