@@ -2,7 +2,8 @@
 function HUD(width, height) {
     var self = this;
 
-    var score = new createjs.Text("Flappy Penguin", "32px Segoe UI", "#fff");
+    var header = new createjs.Text("Flappy Penguin", "32px Segoe UI", "#fff");
+    var score = new createjs.Text("0.0", "32px Sergoe UI", "#fff");
     var pauseScreen = PauseScreen(width, height);
     var pauseText = PauseText(width, height);
     var gameLostText = GameOverText(width, height);
@@ -13,8 +14,11 @@ function HUD(width, height) {
 
     //constructor code
     {
-        score.x = 48;
+        header.x = 48;
+        header.y = 24;
+        score.x = width - 48;
         score.y = 24;
+        score.textAlign = "right";
 
         for (var i = 0; i < MAX_BREATH; i++) {
             var bubble = new createjs.Bitmap("assets/square/bubble.png");
@@ -28,12 +32,14 @@ function HUD(width, height) {
 
     this.registerForRender = function (renderStage) {
         stage = renderStage;
-        stage.addChild(score);
+        renderStage.addChild(header);
 
-        breathBubbles.map(function (x) {stage.addChild(x);});
+        breathBubbles.map(function (x) { renderStage.addChild(x); });
 
-        stage.addChild(pauseScreen);
-        stage.addChild(pauseText);
+        renderStage.addChild(score);
+
+        renderStage.addChild(pauseScreen);
+        renderStage.addChild(pauseText);
     };
 
     this.updateBreath = function (breath) {
@@ -68,4 +74,8 @@ function HUD(width, height) {
         goWon = false;
         goLost = false;
     };
+
+    this.updateScore = function (newScore) {
+        score.text = newScore.toFixed(1);
+    }
 }
