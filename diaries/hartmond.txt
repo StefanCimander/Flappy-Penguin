@@ -1,0 +1,22 @@
+Wed 13 July
+	The score, which was computed all the time but never displayed was added to the rendering pipeline.
+	I added my part of thursdays presentation (Overview of the Software Architecture).
+	
+Mon 11 July 
+	I implemented the game ending reactions of loosing or wining as well as utilites to reset the game for the next to play. This provided a slight challenge as the easeJS Framework renders from a private dictionary that has to be maintained on status changes instead of being directly influenced at draw-calls. To remove the posibility of misuse of state indicators, some refactoring was done, however, the aspect could be more modularised and secure.
+	
+Sat 9 July
+	I implemented some method stubs that thomas needs for his q-learning.
+
+Mon 4 July
+	After the decision to clarify the objective of the game by chasing another penguin, I implemented the Chased penguin. To properly compute and display the penguin positions regarding the bounces from colisions, the positional computation of the scene object was moved from a purely scree-space approach to world-space coordinates plus a global camera adjustment to always keep the player-penguin at the same x-value. This proved to be complicated as the easeJS framework does not natively support camera objects and proper transformation pipelines. To have a comparable effect, the objects coordiates were manually  modified in every game update step.
+
+Wed 29 June
+	As the code from thomas was making a good game but was too sketchy for distributed manipulation, I did a lot of architectural refactorings to improve modularity and readability. Judging by amount of friction with other project members (there was none) and the smotheness of further developement, I asume the effort payed off.
+	
+Mon 27. June
+	Started working on the code that was commenced by thomas. 
+	The Game featured the player penguin that could be controlled by keyboard as well as the moving obstacles, scene objects (water) and the hud.
+	Easejs was difficult as it prevents direct manipulation of the rendering queue but neverthles is a nice and logical framework.
+	I imported the website into Visual Studio to leverage the refactoring, code completion and git integration services provided. Retrospective, I'm verry satisfied with that decission.
+	
