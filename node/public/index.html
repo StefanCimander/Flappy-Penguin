@@ -7,8 +7,8 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/easeljs-0.8.2.min.js"></script>
-    <script src="http://code.createjs.com/soundjs-0.6.1.min.js"></script>
-    <script src="http://code.createjs.com/preloadjs-0.6.1.min.js"></script>
+    <script src="js/soundjs-0.6.1.min.js"></script>
+    <script src="js/preloadjs-0.6.1.min.js"></script>
 
     <script src="js/config.js"></script>
     <script src="js/assets.js"></script>
@@ -38,6 +38,7 @@
                 if (event.key || event.keyCode) {
                     switch (event.keyCode) {
                         case 32: //SPACE
+                        case 33:
                             game.jump();
                             break;
                         case 13: // ENTER
@@ -58,6 +59,17 @@
                 game.computerPenguinJump,
                 game.getComputerPenguinState
             );
+
+            /*
+            window.addEventListener('keydown', function (e) {
+                if (e.key) {
+                    switch (e.keyCode) {
+                        case 33:
+                            game.computerPenguinJump();
+                    }
+                }
+            });
+            */
 
             createjs.Ticker.setFPS(FPS);
             createjs.Ticker.setInterval(1000 / FPS);
