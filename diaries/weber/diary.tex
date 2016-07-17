@@ -2,6 +2,7 @@
 
 \usepackage{graphicx}
 \usepackage{subfig}
+\usepackage{listings}
 
 \begin{document}
 
@@ -101,6 +102,17 @@
 
         With this we are now able to decrease the breath-meter when the user breathes while the penguin is beneath the water surface and increase it when it is above.
 
+        \begin{figure}
+            \centering
+            \subfloat[Final game]{
+                \includegraphics[width=0.45\textwidth]{img/09_final_game.png}
+            }
+            \qquad
+            \subfloat[Victory screen]{
+                \includegraphics[width=0.45\textwidth]{img/10_victory_screen.png}
+            }
+        \end{figure}
+
     \subsection{Integration of sensors}
         With the game being designed from scratch for sensor integration, moving data from Arduino to the web-page was very straight forward.
 
@@ -109,7 +121,7 @@
         We also distinguish between breathing in an out though it has no application in the game.
 
 \section{Week 3 (7/4/16 - 7/10/16)}
-    \section{Tasks}
+    \subsection{Tasks}
     \begin{itemize}
         \item QLearning
     \end{itemize}
